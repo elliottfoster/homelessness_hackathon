@@ -15,6 +15,8 @@ The system enforces UK homelessness policies, including the 42-day emergency acc
 
 ## Features
 
+- ✅ **Conversational intake** - Caseworker-family dialogue with automatic speaker identification (NEW!)
+- ✅ **Voice input** powered by Amazon Transcribe
 - ✅ Web-based form for household information input
 - ✅ Weighted scoring algorithm (location-first approach)
 - ✅ Top 3 property recommendations with detailed explanations
@@ -25,9 +27,10 @@ The system enforces UK homelessness policies, including the 42-day emergency acc
 
 ## Technical Stack
 
-- **Backend**: Python 3.10+
+- **Backend**: Python 3.11+
 - **Web Framework**: Streamlit
 - **Data Processing**: Pandas, NumPy
+- **Voice Input**: Amazon Transcribe (AWS)
 - **Data Storage**: Local CSV files
 
 ## Project Structure
@@ -76,10 +79,17 @@ This creates:
 
 ### Step 3: Run the Application
 
-Start the Streamlit web server:
+**Option A: Standard web form**
 ```bash
 streamlit run app.py
 ```
+
+**Option B: Voice-enabled version (requires AWS setup)**
+```bash
+streamlit run app_voice.py
+```
+
+See **VOICE_SETUP.md** for AWS configuration instructions.
 
 The application will open in your browser at `http://localhost:8501`
 
