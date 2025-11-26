@@ -1,0 +1,8 @@
+household_id,eligibility_pre_screen,area_restrictions,priority_need,intentional_homeless,eligibility,length_of_placement,access_needs,schools,employment,health_social_network,affordability,caring_responsibilities,household_composition,risk_level,drug_use
+HH001,Yes,North London,High,No,Eligible,35,Wheelchair access,Primary school required,Part-time employed,Local GP registered,800,Yes - elderly parent,"2 adults, 2 children",Low,No
+HH002,Yes,East London,Critical,No,Eligible,45,Ground floor only,Secondary school required,Unemployed,Mental health support needed,600,No,"1 adult, 3 children",Medium,No
+HH003,Yes,South London,Medium,No,Eligible,20,None,Not required,Full-time employed,Strong local network,1000,No,2 adults,Low,No
+HH004,Yes,West London,High,No,Eligible,38,Lift required,Primary and secondary required,Self-employed,Hospital nearby needed,900,Yes - disabled child,"2 adults, 4 children",Low,No
+HH005,Yes,Central London,Medium,No,Eligible,15,None,Not required,Unemployed,Substance abuse support,500,No,1 adult,High,Yes - in recovery
+HH006,Yes,North London,High,No,Eligible,28,Wheelchair access,Primary school required,Part-time employed,Disability support services,750,Yes - young children,"1 adult, 2 children",Low,No
+HH007,Yes,East London,Critical,No,Eligible,42,Ground floor only,Not required,Unemployed,Domestic violence support,550,Yes - infant,"1 adult, 1 child",High,No
