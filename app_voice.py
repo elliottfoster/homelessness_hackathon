@@ -50,6 +50,84 @@ def load_properties():
     })
     return df
 
+def display_results(results, household):
+    """Display matching results."""
+    st.header("🎯 Matching Results")
+    
+    # Check for urgent flags
+    length_of_placement = int(household.get('length_of_placement', 0))
+    if length_of_placement >= 42:
+        st.error("🚨 URGENT: This household has reached or exceeded the 42-day emergency accommodation limit. Immediate placement required.")
+    elif length_of_placement >= 35:
+        st.warning("⚠️ WARNING: This household is approaching the 42-day emergency accommodation limit.")
+    
+    # Display top 3 recommendations
+    st.subheader("Top 3 Recommended Properties")
+    
+    top_3 = results[:3]
+    
+    if not top_3:
+        st.warning("No properties found matching the criteria.")
+    else:
+        for idx, prop in enumerate(top_3, 1):
+            with st.expander(f"#{idx} - {prop['property_id']} ({prop['location']}) - Score: {prop['overall_score']:.2f}", expanded=(idx==1)):
+                # Property details
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    st.markdown("**Property Details**")
+                    st.write(f"📍 Location: {prop['location']}")
+                    st.write(f"🛏️ Bedrooms: {prop['beds']}")
+                    st.write(f"🚪 Rooms: {prop['rooms']}")
+                    st.write(f"💷 Rent: £{prop['affordability']}/month")
+                    st.write(f"📅 Tenure: {prop['tenure_length']}")
+                
+                with col2:
+                    st.markdown("**Features & Amenities**")
+                    st.write(f"♿ Access: {prop['access_features']}")
+                    st.write(f"🏘️ Neighbourhood: {prop['neighbour_quality']}")
+                    st.write(f"🏫 Nearby: {prop['nearby_amenities']}")
+                
+                with col3:
+                    st.markdown("**Suitability Scores**")
+                    scores = prop['component_scores']
+                    st.write(f"📍 Location: {scores['location']:.2f}")
+                    st.write(f"🛏️ Bedrooms: {scores['bedrooms']:.2f}")
+                    st.write(f"💷 Affordability: {scores['affordability']:.2f}")
+                    st.write(f"♿ Access: {scores['access']:.2f}")
+                    st.write(f"🏫 Amenities: {scores['amenities']:.2f}")
+                
+                # Match explanation
+                st.markdown("**Match Explanation**")
+                st.info(prop['match_explanation'])
+                
+                # Suitability flags
+                if prop['suitability_flags']:
+                    st.markdown("**Suitability Flags**")
+                    for flag in prop['suitability_flags']:
+                        if '🚨' in flag:
+                            st.error(flag)
+                        else:
+                            st.warning(flag)
+                else:
+                    st.success("✅ No suitability issues identified")
+        
+        # Show all results in table
+        st.subheader("All Properties Ranked")
+        
+        results_table = []
+        for prop in results:
+            results_table.append({
+                'Property ID': prop['property_id'],
+                'Location': prop['location'],
+                'Beds': prop['beds'],
+                'Rent (£)': prop['affordability'],
+                'Overall Score': f"{prop['overall_score']:.2f}",
+                'Issues': len(prop['suitability_flags'])
+            })
+        
+        st.dataframe(results_table, use_container_width=True)
+
 properties_df = load_properties()
 
 if properties_df is not None:
@@ -365,84 +443,6 @@ if properties_df is not None:
                 
                 # Display results
                 display_results(results, household)
-
-def display_results(results, household):
-    """Display matching results."""
-    st.header("🎯 Matching Results")
-    
-    # Check for urgent flags
-    length_of_placement = int(household.get('length_of_placement', 0))
-    if length_of_placement >= 42:
-        st.error("🚨 URGENT: This household has reached or exceeded the 42-day emergency accommodation limit. Immediate placement required.")
-    elif length_of_placement >= 35:
-        st.warning("⚠️ WARNING: This household is approaching the 42-day emergency accommodation limit.")
-    
-    # Display top 3 recommendations
-    st.subheader("Top 3 Recommended Properties")
-    
-    top_3 = results[:3]
-    
-    if not top_3:
-        st.warning("No properties found matching the criteria.")
-    else:
-        for idx, prop in enumerate(top_3, 1):
-            with st.expander(f"#{idx} - {prop['property_id']} ({prop['location']}) - Score: {prop['overall_score']:.2f}", expanded=(idx==1)):
-                # Property details
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.markdown("**Property Details**")
-                    st.write(f"📍 Location: {prop['location']}")
-                    st.write(f"🛏️ Bedrooms: {prop['beds']}")
-                    st.write(f"🚪 Rooms: {prop['rooms']}")
-                    st.write(f"💷 Rent: £{prop['affordability']}/month")
-                    st.write(f"📅 Tenure: {prop['tenure_length']}")
-                
-                with col2:
-                    st.markdown("**Features & Amenities**")
-                    st.write(f"♿ Access: {prop['access_features']}")
-                    st.write(f"🏘️ Neighbourhood: {prop['neighbour_quality']}")
-                    st.write(f"🏫 Nearby: {prop['nearby_amenities']}")
-                
-                with col3:
-                    st.markdown("**Suitability Scores**")
-                    scores = prop['component_scores']
-                    st.write(f"📍 Location: {scores['location']:.2f}")
-                    st.write(f"🛏️ Bedrooms: {scores['bedrooms']:.2f}")
-                    st.write(f"💷 Affordability: {scores['affordability']:.2f}")
-                    st.write(f"♿ Access: {scores['access']:.2f}")
-                    st.write(f"🏫 Amenities: {scores['amenities']:.2f}")
-                
-                # Match explanation
-                st.markdown("**Match Explanation**")
-                st.info(prop['match_explanation'])
-                
-                # Suitability flags
-                if prop['suitability_flags']:
-                    st.markdown("**Suitability Flags**")
-                    for flag in prop['suitability_flags']:
-                        if '🚨' in flag:
-                            st.error(flag)
-                        else:
-                            st.warning(flag)
-                else:
-                    st.success("✅ No suitability issues identified")
-        
-        # Show all results in table
-        st.subheader("All Properties Ranked")
-        
-        results_table = []
-        for prop in results:
-            results_table.append({
-                'Property ID': prop['property_id'],
-                'Location': prop['location'],
-                'Beds': prop['beds'],
-                'Rent (£)': prop['affordability'],
-                'Overall Score': f"{prop['overall_score']:.2f}",
-                'Issues': len(prop['suitability_flags'])
-            })
-        
-        st.dataframe(results_table, use_container_width=True)
 
 # Sidebar with information
 with st.sidebar:
