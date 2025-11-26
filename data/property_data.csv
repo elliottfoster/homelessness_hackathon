@@ -1,0 +1,16 @@
+property_id,location,neighbour_quality,affordability,rooms,beds,tenure_length,access_features,nearby_amenities
+PROP001,North London,Good,800,3,2,long,"Wheelchair accessible, Lift","Primary school, GP surgery"
+PROP002,East London,Fair,600,4,3,long,Ground floor,"Secondary school, Mental health clinic"
+PROP003,South London,Excellent,1000,2,1,short,None,"Transport links, Shopping"
+PROP004,West London,Good,950,5,4,long,"Lift, Wide doorways","Primary school, Secondary school, Hospital"
+PROP005,Central London,Fair,500,1,1,short,None,"Substance abuse clinic, Job centre"
+PROP006,North London,Good,750,3,2,long,"Wheelchair accessible, Ground floor","Primary school, Disability services"
+PROP007,East London,Good,550,2,1,long,"Ground floor, Security entry","Women's refuge nearby, Childcare"
+PROP008,South London,Excellent,900,3,2,long,None,"Transport, Shopping, Parks"
+PROP009,West London,Fair,700,2,1,short,Ground floor,"GP surgery, Pharmacy"
+PROP010,North London,Good,850,4,3,long,Lift,"Primary school, Secondary school"
+PROP011,East London,Fair,650,3,2,long,Ground floor,"Job centre, Transport"
+PROP012,Central London,Poor,450,1,1,short,None,Substance abuse services
+PROP013,South London,Excellent,1100,4,3,long,"Lift, Parking","Schools, Parks, Healthcare"
+PROP014,West London,Good,800,3,2,long,Wheelchair accessible,"Hospital, Schools"
+PROP015,North London,Fair,600,2,1,short,Ground floor,"Transport, GP"

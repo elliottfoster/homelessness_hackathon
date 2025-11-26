@@ -1,0 +1,241 @@
+================================================================================
+TEMPORARY ACCOMMODATION MATCHING PLATFORM - RUN INSTRUCTIONS
+================================================================================
+
+QUICK START (Choose One Option)
+================================================================================
+
+OPTION 1: See Algorithm Demo (NO INSTALLATION REQUIRED)
+------------------------------------------------------------------------
+Run this command to see how the algorithm works:
+
+    python demo_algorithm.py
+
+This shows a step-by-step walkthrough of the matching algorithm with
+example households and properties. No dependencies needed!
+
+
+OPTION 2: Run Full Web Application
+------------------------------------------------------------------------
+Step 1: Install dependencies
+    pip install -r requirements.txt
+
+Step 2: Verify data exists (should already be generated)
+    ls data/
+
+    You should see:
+    - household_data.csv
+    - property_data.csv
+
+    If missing, run:
+    python src/generate_data.py
+
+Step 3: Launch the web application
+    streamlit run app.py
+
+    The app will open in your browser at: http://localhost:8501
+
+
+OPTION 3: Test Matching Engine (Command Line)
+------------------------------------------------------------------------
+Step 1: Install dependencies
+    pip install -r requirements.txt
+
+Step 2: Run test script
+    python test_matching.py
+
+This runs a sample household through the matching algorithm and displays
+detailed results in the terminal.
+
+
+================================================================================
+WHAT EACH FILE DOES
+================================================================================
+
+MAIN APPLICATION FILES:
+- app.py                    → Streamlit web interface (run with: streamlit run app.py)
+- src/matching_engine.py    → Core matching algorithm with weighted scoring
+- src/generate_data.py      → Creates dummy CSV data files
+
+DATA FILES:
+- data/household_data.csv   → 7 dummy households with varied needs
+- data/property_data.csv    → 15 dummy properties across London
+
+TESTING & DEMO:
+- demo_algorithm.py         → Interactive algorithm demo (no dependencies)
+- test_matching.py          → Test script for matching engine
+
+DOCUMENTATION:
+- README.md                 → Full documentation and algorithm explanation
+- QUICKSTART.md             → Quick start guide
+- INSTALLATION.md           → Detailed installation instructions
+- PROJECT_SUMMARY.md        → Complete project summary
+- RUN_INSTRUCTIONS.txt      → This file
+
+CONFIGURATION:
+- requirements.txt          → Python dependencies list
+- pyproject.toml            → Project configuration
+- setup.sh                  → Automated setup script
+
+
+================================================================================
+DEPENDENCIES
+================================================================================
+
+Required Python packages:
+- streamlit (web framework)
+- pandas (data manipulation)
+- numpy (numerical operations)
+- scikit-learn (ML utilities)
+
+Install all at once:
+    pip install -r requirements.txt
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Module not found" error
+Solution: pip install -r requirements.txt
+
+Problem: "Property data not found" error
+Solution: python src/generate_data.py
+
+Problem: Port 8501 already in use
+Solution: streamlit run app.py --server.port 8502
+
+Problem: Python version error
+Solution: Requires Python 3.11+. Check with: python --version
+
+
+================================================================================
+USING THE WEB APPLICATION
+================================================================================
+
+1. Start the app:
+   streamlit run app.py
+
+2. Fill in the household form:
+   - Household composition (e.g., "2 adults, 2 children")
+   - Preferred area (North/East/South/West/Central London)
+   - Monthly budget (£)
+   - Days in emergency accommodation
+   - Access needs (e.g., "Wheelchair access")
+   - School requirements
+   - Employment status
+   - Health/social support needs
+   - Other details
+
+3. Click "Find Suitable Accommodation"
+
+4. Review results:
+   - Top 3 recommended properties
+   - Detailed scoring breakdown
+   - Match explanations
+   - Suitability flags
+   - Full ranked list
+
+
+================================================================================
+UNDERSTANDING THE ALGORITHM
+================================================================================
+
+The platform uses WEIGHTED SCORING (not machine learning) because:
+- Transparent and explainable decisions
+- Aligns with UK housing allocation policies
+- Small dataset (7 households, 15 properties)
+- Easy to audit and adjust
+
+SCORING WEIGHTS:
+- Location:           35% (HIGHEST - area restrictions critical)
+- Bedroom Suitability: 25% (household size requirements)
+- Affordability:       20% (budget constraints)
+- Access Needs:        15% (accessibility requirements)
+- Amenities:            5% (schools, healthcare, etc.)
+
+POLICY ENFORCEMENT:
+- 42-day emergency accommodation limit tracked
+- UK bedroom standards enforced
+- Critical access needs mandatory
+- Budget constraints respected
+
+
+================================================================================
+EXAMPLE SCENARIOS IN DATA
+================================================================================
+
+The dummy data includes realistic scenarios:
+
+HH001: Family with wheelchair needs, 35 days (approaching 42-day limit)
+HH002: Single parent with 3 children, 45 days (EXCEEDS limit - URGENT)
+HH003: Couple, employed, 20 days (standard case)
+HH004: Large family (4 children), disabled child, 38 days
+HH005: Single adult in recovery, 15 days
+HH006: Single parent with wheelchair needs, 28 days
+HH007: Domestic violence survivor, 42 days (AT limit - URGENT)
+
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+homelessness_hackathon/
+├── app.py                      # Main Streamlit application
+├── demo_algorithm.py           # Algorithm demo (no dependencies)
+├── test_matching.py            # Test script
+│
+├── src/
+│   ├── __init__.py
+│   ├── matching_engine.py      # Core matching algorithm
+│   └── generate_data.py        # CSV data generator
+│
+├── data/
+│   ├── household_data.csv      # 7 dummy households
+│   └── property_data.csv       # 15 dummy properties
+│
+├── README.md                   # Full documentation
+├── QUICKSTART.md               # Quick start guide
+├── INSTALLATION.md             # Installation instructions
+├── PROJECT_SUMMARY.md          # Project summary
+├── RUN_INSTRUCTIONS.txt        # This file
+│
+├── requirements.txt            # Python dependencies
+├── pyproject.toml              # Project configuration
+└── setup.sh                    # Setup script
+
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Start with the demo:
+   python demo_algorithm.py
+
+2. Install dependencies:
+   pip install -r requirements.txt
+
+3. Run the web app:
+   streamlit run app.py
+
+4. Try different household scenarios
+
+5. Explore the code to understand implementation
+
+6. Read README.md for detailed documentation
+
+
+================================================================================
+SUPPORT
+================================================================================
+
+For detailed information:
+- README.md - Full documentation
+- INSTALLATION.md - Setup guide
+- PROJECT_SUMMARY.md - Project overview
+- Code comments - Implementation details
+
+
+================================================================================
+END OF INSTRUCTIONS
+================================================================================
