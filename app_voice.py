@@ -33,7 +33,7 @@ st.set_page_config(
 
 # Load GOV.UK styling
 try:
-    with open('govuk_style.css') as f:
+    with open('static/css/govuk_style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 except FileNotFoundError:
     pass  # CSS file not found, use default styling
@@ -50,7 +50,7 @@ st.markdown("""
 # Add MATCH logo below header
 try:
     from PIL import Image
-    logo = Image.open('match_logo.png')
+    logo = Image.open('static/images/match_logo.png')
     col1, col2 = st.columns([1, 3])
     with col1:
         st.image(logo, width=250)

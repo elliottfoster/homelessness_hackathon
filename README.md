@@ -13,6 +13,21 @@ This platform helps match homeless households to temporary accommodation using a
 
 The system enforces UK homelessness policies, including the 42-day emergency accommodation limit for families.
 
+## Prerequisites
+
+### Core Requirements (Required)
+- Python 3.11 or higher
+- pip package manager
+- 4 Python packages: streamlit, pandas, numpy, scikit-learn
+
+### Optional Voice Features
+- **AWS Account** - For speech-to-text transcription (Amazon Transcribe)
+- **boto3** - AWS SDK for Python
+- **ffmpeg** - For in-browser audio recording
+- **streamlit-audiorecorder** - Audio recording component
+
+**Note:** The core matching platform (`app.py`) works without AWS or voice features. Voice capabilities (`app_voice.py`) require AWS setup - see VOICE_SETUP.md for details.
+
 ## Features
 
 - ✅ **In-browser audio recording** - Record conversations directly in the app (NEW!)
@@ -41,33 +56,49 @@ The system enforces UK homelessness policies, including the 42-day emergency acc
 ```
 homelessness_hackathon/
 ├── app.py                      # Main Streamlit application
-├── src/
+├── app_voice.py                # Voice-enabled application
+├── src/                        # Source code
 │   ├── matching_engine.py      # Weighted scoring algorithm
+│   ├── voice_handler.py        # Voice input handler
 │   └── generate_data.py        # CSV data generation script
-├── data/
-│   ├── household_data.csv      # Dummy household data (generated)
-│   └── property_data.csv       # Dummy property data (generated)
-├── pyproject.toml              # Python dependencies
+├── data/                       # Data files
+│   ├── household_data.csv      # Dummy household data
+│   └── property_data.csv       # Dummy property data
+├── docs/                       # Documentation
+│   ├── getting-started/        # Installation and setup
+│   ├── features/               # Feature documentation
+│   ├── development/            # Development docs
+│   ├── project/                # Project summaries
+│   └── guides/                 # How-to guides
+├── tests/                      # Test files
+├── examples/                   # Demo scripts
+├── static/                     # Static assets (CSS, images)
+├── scripts/                    # Utility scripts
+├── requirements.txt            # Python dependencies
+├── pyproject.toml              # Project configuration
 └── README.md                   # This file
 ```
 
 ## Installation & Setup
 
-### Prerequisites
-- Python 3.10 or higher
-- pip or uv package manager
+### Step 1: Install Core Dependencies
 
-### Step 1: Install Dependencies
-
-Using pip:
+**Option A - Install core dependencies only (no voice features):**
 ```bash
 pip install streamlit pandas numpy scikit-learn
 ```
 
-Or using uv (recommended):
+**Option B - Install all dependencies (including voice features):**
 ```bash
-uv pip install streamlit pandas numpy scikit-learn
+pip install -r requirements.txt
 ```
+
+**Option C - Using uv (recommended):**
+```bash
+uv pip install -r requirements.txt
+```
+
+**Note:** Voice features require additional setup (AWS account, ffmpeg). See [VOICE_SETUP.md](docs/features/VOICE_SETUP.md) and [IN_BROWSER_RECORDING.md](docs/features/IN_BROWSER_RECORDING.md) for details.
 
 ### Step 2: Generate Dummy Data
 
@@ -92,7 +123,7 @@ streamlit run app.py
 streamlit run app_voice.py
 ```
 
-See **VOICE_SETUP.md** for AWS configuration and **IN_BROWSER_RECORDING.md** for recording setup.
+See **[VOICE_SETUP.md](docs/features/VOICE_SETUP.md)** for AWS configuration and **[IN_BROWSER_RECORDING.md](docs/features/IN_BROWSER_RECORDING.md)** for recording setup.
 
 The application will open in your browser at `http://localhost:8501`
 
@@ -228,6 +259,12 @@ The dummy data includes realistic scenarios:
 - Case worker dashboard for managing multiple households
 - Automated alerts for 42-day limit approaching
 
+## Version
+
+**Current Version**: 1.0.0 (November 27, 2025)
+
+See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+
 ## License
 
 This is a prototype for demonstration purposes.
@@ -235,3 +272,14 @@ This is a prototype for demonstration purposes.
 ## Contact
 
 For questions or improvements, please open an issue.
+
+## Additional Resources
+
+- **[CHANGELOG.md](docs/development/CHANGELOG.md)** - Version history and updates
+- **[VOICE_SETUP.md](docs/features/VOICE_SETUP.md)** - AWS configuration for voice features
+- **[IN_BROWSER_RECORDING.md](docs/features/IN_BROWSER_RECORDING.md)** - In-browser recording setup
+- **[CONVERSATIONAL_INTAKE_GUIDE.md](docs/features/CONVERSATIONAL_INTAKE_GUIDE.md)** - Guide for caseworkers
+- **[BUGFIX.md](docs/development/BUGFIX.md)** - Known issues and solutions
+- **[QUICKSTART.md](docs/getting-started/QUICKSTART.md)** - Quick start guide
+- **[INSTALLATION.md](docs/getting-started/INSTALLATION.md)** - Detailed installation guide
+- **[USAGE_GUIDE.md](docs/getting-started/USAGE_GUIDE.md)** - Complete usage guide

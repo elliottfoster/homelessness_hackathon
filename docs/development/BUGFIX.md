@@ -6,7 +6,7 @@ When running the application, you encountered this error:
 
 ```
 AttributeError: 'float' object has no attribute 'lower'
-File "/Users/elliottfoster1/Documents/GitHub/homelessness_hackathon/src/matching_engine.py", line 109
+File "src/matching_engine.py", line 109
 features_lower = property_features.lower()
 ```
 

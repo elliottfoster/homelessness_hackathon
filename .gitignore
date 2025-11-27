@@ -205,3 +205,17 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# AWS Credentials and Configuration
+.aws/
+*.pem
+*.key
+*credentials*
+*config.json
+*.env.local
+*.env.production
+
+# Sensitive Data
+secrets/
+private/
+*.secret
