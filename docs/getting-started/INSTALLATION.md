@@ -1,25 +1,40 @@
 # Installation Guide
 
+## Prerequisites
+
+### Core Requirements (Required)
+- Python 3.11 or higher
+- pip package manager
+- 100MB free disk space
+- Modern web browser
+
+### Optional Requirements (For Voice Features)
+- AWS account with Transcribe access
+- ffmpeg (for in-browser recording)
+- Additional Python packages: boto3, streamlit-audiorecorder, pydub
+
+**Note:** The core platform works without AWS or voice features. Voice capabilities are optional.
+
 ## Quick Start (3 Steps)
 
 ### Step 1: Install Dependencies
 
 Choose one of the following methods:
 
-**Option A - Using pip:**
+**Option A - Core dependencies only (no voice features):**
+```bash
+pip install streamlit pandas numpy scikit-learn
+```
+
+**Option B - All dependencies (including voice features):**
 ```bash
 pip install -r requirements.txt
 ```
 
-**Option B - Using the setup script:**
+**Option C - Using the setup script:**
 ```bash
 chmod +x setup.sh
 ./setup.sh
-```
-
-**Option C - Manual installation:**
-```bash
-pip install streamlit pandas numpy scikit-learn
 ```
 
 ### Step 2: Generate Data (if not already done)
@@ -94,10 +109,22 @@ streamlit run app.py --server.port 8502
 
 ## Dependencies
 
-- `streamlit` - Web application framework
-- `pandas` - Data manipulation
-- `numpy` - Numerical operations
-- `scikit-learn` - ML utilities (for future enhancements)
+### Core Dependencies (Required)
+- `streamlit>=1.28.0` - Web application framework
+- `pandas>=2.0.0` - Data manipulation
+- `numpy>=1.24.0` - Numerical operations
+- `scikit-learn>=1.3.0` - ML utilities (for future enhancements)
+
+### Optional Dependencies (Voice Features)
+- `boto3>=1.28.0` - AWS SDK for Python (Amazon Transcribe)
+- `streamlit-audiorecorder>=0.0.5` - In-browser audio recording
+- `pydub>=0.25.1` - Audio processing
+
+### System Dependencies (Optional)
+- `ffmpeg` - Required for in-browser audio recording
+  - macOS: `brew install ffmpeg`
+  - Ubuntu/Debian: `sudo apt-get install ffmpeg`
+  - Windows: Download from https://ffmpeg.org/download.html
 
 ## Next Steps
 

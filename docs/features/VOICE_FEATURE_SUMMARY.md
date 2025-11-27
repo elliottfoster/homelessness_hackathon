@@ -203,10 +203,12 @@ The `VoiceInputHandler` class uses regex and keyword matching to extract:
 
 ## Cost Analysis
 
-### Amazon Transcribe Pricing
+### Amazon Transcribe Pricing (Approximate - 2025)
 
-- **First 60 minutes/month**: FREE
-- **After that**: ~$0.024 per minute
+- **First 60 minutes/month**: FREE (AWS Free Tier)
+- **After that**: ~$0.024 per minute (standard pricing)
+
+**Note:** Pricing may vary by region and is subject to change. Check [AWS Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/) for current rates.
 
 ### Typical Usage Costs
 
@@ -220,10 +222,13 @@ The `VoiceInputHandler` class uses regex and keyword matching to extract:
 
 **Assumptions**: 2 minutes per household average
 
-### S3 Storage Costs
+### S3 Storage Costs (Approximate - 2025)
 
 - Negligible (files deleted immediately)
 - < $1/month for typical usage
+- Standard storage: ~$0.023 per GB/month
+
+**Note:** Check [AWS S3 Pricing](https://aws.amazon.com/s3/pricing/) for current rates.
 
 ### Total Monthly Cost
 

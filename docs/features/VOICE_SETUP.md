@@ -204,24 +204,28 @@ aws s3 ls
 
 ## Cost Considerations
 
-### Amazon Transcribe Pricing (as of 2024)
+### Amazon Transcribe Pricing (Approximate - 2025)
 
-- **First 60 minutes/month**: FREE
-- **After that**: ~$0.024 per minute
+- **First 60 minutes/month**: FREE (AWS Free Tier)
+- **After that**: ~$0.024 per minute (standard pricing)
+
+**Note:** Pricing may vary by region and is subject to change. Check [AWS Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/) for current rates.
 
 **Example costs:**
 - 10 households @ 2 min each = 20 min = FREE
 - 100 households @ 2 min each = 200 min = ~$3.36
 - 1000 households @ 2 min each = 2000 min = ~$46.56
 
-### Amazon S3 Pricing
+### Amazon S3 Pricing (Approximate - 2025)
 
-- **Storage**: ~$0.023 per GB/month
+- **Storage**: ~$0.023 per GB/month (standard storage)
 - **Requests**: Minimal (files deleted immediately)
 
 **Example costs:**
 - Audio files are temporary (deleted after transcription)
-- Negligible cost for this use case
+- Negligible cost for this use case (< $1/month typically)
+
+**Note:** Pricing may vary by region. Check [AWS S3 Pricing](https://aws.amazon.com/s3/pricing/) for current rates.
 
 ### Total Cost Estimate
 

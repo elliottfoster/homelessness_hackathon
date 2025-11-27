@@ -10,9 +10,28 @@ python demo_algorithm.py
 
 This shows how the matching algorithm works with a step-by-step example.
 
-### Option 2: Run the Full Platform
+### Option 2: Run the Core Platform (No AWS Required)
 
-**Step 1: Install dependencies**
+**Step 1: Install core dependencies**
+```bash
+pip install streamlit pandas numpy scikit-learn
+```
+
+**Step 2: Generate data** (already done if you see files in `data/`)
+```bash
+python src/generate_data.py
+```
+
+**Step 3: Launch the web app**
+```bash
+streamlit run app.py
+```
+
+Open your browser to `http://localhost:8501`
+
+### Option 3: Run with Voice Features (AWS Required)
+
+**Step 1: Install all dependencies**
 ```bash
 pip install -r requirements.txt
 ```
