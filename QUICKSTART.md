@@ -23,8 +23,15 @@ python src/generate_data.py
 ```
 
 **Step 3: Launch the web app**
+
+**Standard version:**
 ```bash
 streamlit run app.py
+```
+
+**Voice-enabled version (with in-browser recording):**
+```bash
+streamlit run app_voice.py
 ```
 
 Open your browser to `http://localhost:8501`
@@ -36,6 +43,14 @@ python test_matching.py
 ```
 
 This runs a sample household through the matching algorithm and shows results in the terminal.
+
+### Option 4: Voice Features Demo
+
+```bash
+python demo_conversation.py
+```
+
+Shows example conversational intake scenarios.
 
 ## 📁 What's Included
 
@@ -62,6 +77,9 @@ homelessness_hackathon/
 
 ## 🎯 Key Features
 
+- ✅ **In-browser audio recording** - Record directly in the app
+- ✅ **Conversational intake** - Caseworker-family dialogue
+- ✅ **Speaker diarization** - Automatic speaker identification
 - ✅ Weighted scoring algorithm (location-first)
 - ✅ 42-day emergency accommodation limit enforcement
 - ✅ UK bedroom standard compliance
@@ -128,6 +146,17 @@ streamlit run app.py --server.port 8502
 
 **"AttributeError: 'float' object has no attribute 'lower'" error?**
 This has been fixed! See BUGFIX.md for details. Make sure you have the latest code.
+
+**"Couldn't find ffmpeg" warning?**
+Install ffmpeg for in-browser recording:
+```bash
+# macOS
+brew install ffmpeg
+
+# Ubuntu/Debian
+sudo apt-get install ffmpeg
+```
+See IN_BROWSER_RECORDING.md for details.
 
 ## 📚 Learn More
 
