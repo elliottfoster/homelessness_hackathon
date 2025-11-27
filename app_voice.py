@@ -341,7 +341,7 @@ if properties_df is not None:
             # Process button
             has_audio = audio_file_path is not None or (recording_method == "📁 Upload audio file" and audio_file is not None)
             
-            if st.button("🎤 Process Voice Input", type="primary", disabled=not has_audio):
+            if st.button("🎤 Process Voice Input", type="primary", disabled=not has_audio, key="process_audio_btn"):
                 if not s3_bucket:
                     st.error("Please provide an S3 bucket name in the AWS Configuration section")
                 else:
@@ -366,9 +366,22 @@ if properties_df is not None:
                                 # Parse conversation
                                 with st.spinner("Analyzing conversation and extracting information..."):
                                     household = voice_handler.parse_conversation(transcript_data)
-                                    # Store in session state
+                                    # Store in session state so it persists across button clicks
                                     st.session_state['household_data'] = household
                                     st.session_state['voice_processed'] = True
+                                
+
+
+
+                                
+
+                                
+
+                                
+
+                                
+
+                            
                             else:
                                 st.error("❌ Failed to transcribe audio. Please check your AWS configuration and try again.")
                             
@@ -384,7 +397,7 @@ if properties_df is not None:
                 household_display = st.session_state['household_data']
                 conv = household_display.get('conversation', {})
                 
-                st.subheader("Conversation Analysis")
+                st.subheader("💬 Conversation Analysis")
                 
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -397,24 +410,24 @@ if properties_df is not None:
                     st.metric("Information Source", f"Speaker {family[-1]}")
                 
                 # Show conversation transcript
-                with st.expander("View full conversation transcript"):
+                with st.expander("📝 View Full Conversation Transcript"):
                     speaker_segments = conv.get('speaker_segments', [])
                     for seg in speaker_segments:
                         speaker = seg['speaker']
                         text = seg['text']
                         if speaker == conv.get('caseworker_speaker'):
-                            st.markdown(f"**Caseworker:** {text}")
+                            st.markdown(f"**👔 Caseworker:** {text}")
                         else:
-                            st.markdown(f"**Family member:** _{text}_")
+                            st.markdown(f"**👤 Family Member:** _{text}_")
                     st.divider()
                     st.caption(f"Full transcript: {conv.get('full_transcript', '')}")
                 
                 # Show extracted information
-                st.subheader("Extracted information")
+                st.subheader("📊 Extracted Information")
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    st.markdown("**Basic information**")
+                    st.markdown("**Basic Information:**")
                     st.write(f"• Composition: {household_display['household_composition']}")
                     st.write(f"• Area: {household_display['area_restrictions']}")
                     st.write(f"• Budget: £{household_display['affordability']}/month")
@@ -422,14 +435,14 @@ if properties_df is not None:
                     st.write(f"• Priority: {household_display['priority_need']}")
                 
                 with col2:
-                    st.markdown("**Specific needs**")
+                    st.markdown("**Specific Needs:**")
                     st.write(f"• Access: {household_display['access_needs']}")
                     st.write(f"• Schools: {household_display['schools']}")
                     st.write(f"• Employment: {household_display['employment']}")
                     st.write(f"• Health: {household_display['health_social_network']}")
                 
                 # Run matching button
-                if st.button("Find suitable accommodation", key="voice_match_button", type="primary"):
+                if st.button("🔍 Find Suitable Accommodation", key="voice_match_button"):
                     with st.spinner("Matching household to properties..."):
                         matcher = AccommodationMatcher(properties_df)
                         results = matcher.match_household(household_display)
