@@ -25,17 +25,45 @@ except ImportError:
 
 # Page configuration
 st.set_page_config(
-    page_title="Voice-Enabled Accommodation Matcher",
-    page_icon="🎤",
-    layout="wide"
+    page_title="Temporary Accommodation Matching Service - GOV.UK",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Title and description
-st.title("🎤 Voice-Enabled Temporary Accommodation Matching")
+# Load GOV.UK styling
+try:
+    with open('govuk_style.css') as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+except FileNotFoundError:
+    pass  # CSS file not found, use default styling
+
+# GOV.UK Header
 st.markdown("""
-This platform matches homeless households to suitable temporary accommodation 
-using **voice input** powered by Amazon Transcribe. Simply speak your household 
-information instead of filling out forms.
+<div style="background-color: #0b0c0c; padding: 0.5rem 1rem; margin: -6rem -6rem 2rem -6rem;">
+    <div style="max-width: 960px; margin: 0 auto;">
+        <span style="color: white; font-size: 1.5rem; font-weight: 700;">GOV.UK</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Phase banner
+st.markdown("""
+<div style="background-color: #f3f2f1; padding: 0.75rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid #b1b4b6;">
+    <div style="max-width: 960px; margin: 0 auto;">
+        <span style="background-color: #1d70b8; color: white; padding: 0.25rem 0.5rem; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-right: 0.5rem;">BETA</span>
+        <span style="color: #0b0c0c;">This is a prototype service – your <a href="#" style="color: #1d70b8;">feedback</a> will help us to improve it.</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Title and description
+st.title("Temporary Accommodation Matching Service")
+st.markdown("""
+Use this service to match homeless households to suitable temporary accommodation 
+based on their needs and circumstances.
+
+This service uses voice input technology to make the process more accessible.
 """)
 
 # Load property data
@@ -148,10 +176,10 @@ if properties_df is not None:
         voice_available = False
     
     # Create tabs for voice and manual input
-    tab1, tab2 = st.tabs(["🎤 Voice Input", "📝 Manual Input"])
+    tab1, tab2 = st.tabs(["Voice input", "Manual input"])
     
     with tab1:
-        st.header("🎤 Conversational Intake Mode")
+        st.header("Voice input")
         
         if not voice_available:
             st.warning("""
@@ -322,93 +350,83 @@ if properties_df is not None:
                                 # Parse conversation
                                 with st.spinner("Analyzing conversation and extracting information..."):
                                     household = voice_handler.parse_conversation(transcript_data)
-                            
-                            # Show conversation analysis
-                            st.subheader("💬 Conversation Analysis")
-                            
-                            conv = household.get('conversation', {})
-                            
-                            col1, col2, col3 = st.columns(3)
-                            with col1:
-                                st.metric("Conversation Turns", conv.get('num_turns', 0))
-                            with col2:
-                                st.metric("Speakers Identified", 2)
-                            with col3:
-                                caseworker = conv.get('caseworker_speaker', 'spk_0')
-                                family = conv.get('family_speaker', 'spk_1')
-                                st.metric("Information Source", f"Speaker {family[-1]}")
-                            
-                            # Show conversation transcript with speaker labels
-                            with st.expander("📝 View Full Conversation Transcript"):
-                                speaker_segments = conv.get('speaker_segments', [])
-                                
-                                for seg in speaker_segments:
-                                    speaker = seg['speaker']
-                                    text = seg['text']
-                                    
-                                    # Identify role
-                                    if speaker == conv.get('caseworker_speaker'):
-                                        role = "👔 Caseworker"
-                                        st.markdown(f"**{role}:** {text}")
-                                    else:
-                                        role = "👤 Family Member"
-                                        st.markdown(f"**{role}:** _{text}_")
-                                
-                                st.divider()
-                                st.caption(f"Full transcript: {conv.get('full_transcript', '')}")
-                            
-                            # Show extracted information
-                            st.subheader("📊 Extracted Information")
-                            col1, col2 = st.columns(2)
-                            
-                            with col1:
-                                st.markdown("**Basic Information:**")
-                                st.write(f"• Composition: {household['household_composition']}")
-                                st.write(f"• Area: {household['area_restrictions']}")
-                                st.write(f"• Budget: £{household['affordability']}/month")
-                                st.write(f"• Days in emergency: {household['length_of_placement']}")
-                                st.write(f"• Priority: {household['priority_need']}")
-                            
-                            with col2:
-                                st.markdown("**Specific Needs:**")
-                                st.write(f"• Access: {household['access_needs']}")
-                                st.write(f"• Schools: {household['schools']}")
-                                st.write(f"• Employment: {household['employment']}")
-                                st.write(f"• Health: {household['health_social_network']}")
-                            
-                            # Allow editing
-                            if st.checkbox("✏️ Edit extracted information"):
-                                with st.form("edit_form"):
-                                    household['household_composition'] = st.text_input("Household Composition", household['household_composition'])
-                                    household['area_restrictions'] = st.selectbox("Area", 
-                                        ["North London", "East London", "South London", "West London", "Central London"],
-                                        index=["North London", "East London", "South London", "West London", "Central London"].index(household['area_restrictions'])
-                                    )
-                                    household['affordability'] = st.number_input("Budget (£)", value=household['affordability'])
-                                    
-                                    if st.form_submit_button("Update Information"):
-                                        st.success("Information updated!")
-                            
-                            # Run matching
-                            if st.button("🔍 Find Suitable Accommodation"):
-                                with st.spinner("Matching household to properties..."):
-                                    matcher = AccommodationMatcher(properties_df)
-                                    results = matcher.match_household(household)
-                                
-                                # Display results (same as original app)
-                                display_results(results, household)
-                            
+                                    # Store in session state
+                                    st.session_state['household_data'] = household
+                                    st.session_state['voice_processed'] = True
                             else:
                                 st.error("❌ Failed to transcribe audio. Please check your AWS configuration and try again.")
+                            
+
                         
                         finally:
                             # Cleanup temp file
                             if os.path.exists(tmp_path):
                                 os.unlink(tmp_path)
+            
+            # Display processed data if it exists in session state
+            if 'household_data' in st.session_state and st.session_state.get('voice_processed', False):
+                household_display = st.session_state['household_data']
+                conv = household_display.get('conversation', {})
+                
+                st.subheader("Conversation Analysis")
+                
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Conversation Turns", conv.get('num_turns', 0))
+                with col2:
+                    st.metric("Speakers Identified", 2)
+                with col3:
+                    caseworker = conv.get('caseworker_speaker', 'spk_0')
+                    family = conv.get('family_speaker', 'spk_1')
+                    st.metric("Information Source", f"Speaker {family[-1]}")
+                
+                # Show conversation transcript
+                with st.expander("View full conversation transcript"):
+                    speaker_segments = conv.get('speaker_segments', [])
+                    for seg in speaker_segments:
+                        speaker = seg['speaker']
+                        text = seg['text']
+                        if speaker == conv.get('caseworker_speaker'):
+                            st.markdown(f"**Caseworker:** {text}")
+                        else:
+                            st.markdown(f"**Family member:** _{text}_")
+                    st.divider()
+                    st.caption(f"Full transcript: {conv.get('full_transcript', '')}")
+                
+                # Show extracted information
+                st.subheader("Extracted information")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("**Basic information**")
+                    st.write(f"• Composition: {household_display['household_composition']}")
+                    st.write(f"• Area: {household_display['area_restrictions']}")
+                    st.write(f"• Budget: £{household_display['affordability']}/month")
+                    st.write(f"• Days in emergency: {household_display['length_of_placement']}")
+                    st.write(f"• Priority: {household_display['priority_need']}")
+                
+                with col2:
+                    st.markdown("**Specific needs**")
+                    st.write(f"• Access: {household_display['access_needs']}")
+                    st.write(f"• Schools: {household_display['schools']}")
+                    st.write(f"• Employment: {household_display['employment']}")
+                    st.write(f"• Health: {household_display['health_social_network']}")
+                
+                # Run matching button
+                if st.button("Find suitable accommodation", key="voice_match_button", type="primary"):
+                    with st.spinner("Matching household to properties..."):
+                        matcher = AccommodationMatcher(properties_df)
+                        results = matcher.match_household(household_display)
+                        st.session_state['match_results'] = results
+                        st.session_state['show_results'] = True
+                
+                # Display results if they exist
+                if st.session_state.get('show_results', False) and 'match_results' in st.session_state:
+                    display_results(st.session_state['match_results'], household_display)
     
     with tab2:
-        st.header("📝 Manual Input Mode")
-        st.markdown("Fill in the form manually if you prefer not to use voice input.")
+        st.header("Manual input")
+        st.markdown("Fill in the form if you prefer not to use voice input.")
         
         # Original form (same as app.py)
         with st.form("household_form"):
@@ -530,35 +548,32 @@ if properties_df is not None:
 
 # Sidebar with information
 with st.sidebar:
-    st.header("ℹ️ About Voice Input")
+    st.markdown("### About this service")
     st.markdown("""
-    This platform uses **Amazon Transcribe** to convert your spoken words into text.
-    
-    **Benefits:**
-    - 🎤 Faster than typing
-    - 🌍 Accessible for all literacy levels
-    - 💬 Natural conversation style
-    - ♿ Supports those with typing difficulties
+    This service uses Amazon Transcribe to convert spoken words into text, making it more accessible.
     
     **How it works:**
-    1. Record your household information
+    1. Record household information
     2. Upload the audio file
-    3. Amazon Transcribe converts speech to text
-    4. AI extracts household details
+    3. System converts speech to text
+    4. Information is extracted automatically
     5. Matching algorithm finds suitable properties
     """)
     
-    st.header("📊 Scoring Weights")
+    st.markdown("### Matching criteria")
     st.markdown("""
-    - 🎯 Location: 35% (highest priority)
-    - 🛏️ Bedroom suitability: 25%
-    - 💷 Affordability: 20%
-    - ♿ Access needs: 15%
-    - 🏫 Amenities: 5%
+    Properties are scored based on:
+    - Location: 35% (highest priority)
+    - Bedroom suitability: 25%
+    - Affordability: 20%
+    - Access needs: 15%
+    - Amenities: 5%
     """)
     
     if properties_df is not None:
-        st.header("📊 Available Properties")
-        st.metric("Total Properties", len(properties_df))
-        st.metric("Locations", properties_df['location'].nunique())
-        st.metric("Avg Rent", f"£{properties_df['affordability'].astype(float).mean():.0f}")
+        st.markdown("### Available properties")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total", len(properties_df))
+        with col2:
+            st.metric("Locations", properties_df['location'].nunique())
