@@ -38,14 +38,30 @@ try:
 except FileNotFoundError:
     pass  # CSS file not found, use default styling
 
-# GOV.UK Header
+# GOV.UK Header with Logo
 st.markdown("""
 <div style="background-color: #0b0c0c; padding: 0.5rem 1rem; margin: -6rem -6rem 2rem -6rem;">
-    <div style="max-width: 960px; margin: 0 auto;">
+    <div style="max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
         <span style="color: white; font-size: 1.5rem; font-weight: 700;">GOV.UK</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+# Add MATCH logo below header
+try:
+    from PIL import Image
+    logo = Image.open('match_logo.png')
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        st.image(logo, width=250)
+except Exception as e:
+    # Simple fallback
+    st.markdown("""
+    <div style="padding: 1rem 0;">
+        <h2 style="color: #2B5F7F; margin: 0;">MATCH</h2>
+        <p style="color: #505a5f; font-size: 0.9rem; margin: 0.25rem 0;">Temporary Accommodation Matching Service</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Phase banner
 st.markdown("""
