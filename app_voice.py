@@ -16,6 +16,13 @@ sys.path.insert(0, str(Path(__file__).parent / 'src'))
 from matching_engine import AccommodationMatcher
 from voice_handler import VoiceInputHandler
 
+# Try to import audio recorder
+try:
+    from audiorecorder import audiorecorder
+    AUDIO_RECORDER_AVAILABLE = True
+except ImportError:
+    AUDIO_RECORDER_AVAILABLE = False
+
 # Page configuration
 st.set_page_config(
     page_title="Voice-Enabled Accommodation Matcher",
@@ -189,12 +196,81 @@ if properties_df is not None:
             *The system will automatically identify speakers and extract information from the family's responses.*
             """)
             
-            # Audio recorder
-            audio_file = st.file_uploader(
-            "Upload audio file (MP3, WAV, FLAC)",
-            type=['mp3', 'wav', 'flac', 'ogg', 'm4a'],
-                help="Record your household information and upload the audio file"
+            # Recording options
+            st.subheader("🎙️ Record or Upload Audio")
+            
+            recording_method = st.radio(
+                "Choose recording method:",
+                ["📱 Record directly in browser", "📁 Upload audio file"],
+                horizontal=True
             )
+            
+            audio_data = None
+            audio_file = None
+            audio_file_path = None
+            
+            if recording_method == "📱 Record directly in browser":
+                if AUDIO_RECORDER_AVAILABLE:
+                    st.info("Click the microphone button below to start/stop recording")
+                    
+                    try:
+                        audio_data = audiorecorder("🎤 Start Recording", "⏹️ Stop Recording")
+                        
+                        if len(audio_data) > 0:
+                            st.success(f"✅ Recording captured! Duration: {len(audio_data) / audio_data.frame_rate:.1f} seconds")
+                            
+                            # Play back the recording
+                            st.audio(audio_data.export().read())
+                            
+                            # Save to temp file
+                            with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
+                                audio_data.export(tmp_file.name, format="wav")
+                                audio_file_path = tmp_file.name
+                    except Exception as e:
+                        st.error(f"""
+                        ❌ Recording error: {str(e)}
+                        
+                        **This might be due to missing ffmpeg.**
+                        
+                        **To install ffmpeg:**
+                        
+                        **macOS:**
+                        ```bash
+                        brew install ffmpeg
+                        ```
+                        
+                        **Ubuntu/Debian:**
+                        ```bash
+                        sudo apt-get install ffmpeg
+                        ```
+                        
+                        **Windows:**
+                        Download from https://ffmpeg.org/download.html
+                        
+                        **Alternative:** Use "Upload audio file" option instead.
+                        """)
+                else:
+                    st.warning("""
+                    ⚠️ Audio recorder not available.
+                    
+                    **To enable in-browser recording:**
+                    ```bash
+                    pip install streamlit-audiorecorder
+                    ```
+                    
+                    For now, please use "Upload audio file" option.
+                    """)
+            
+            else:  # Upload audio file
+                audio_file = st.file_uploader(
+                    "Upload audio file (MP3, WAV, FLAC)",
+                    type=['mp3', 'wav', 'flac', 'ogg', 'm4a'],
+                    help="Record your household information and upload the audio file"
+                )
+                
+                if audio_file:
+                    st.success(f"✅ File uploaded: {audio_file.name}")
+                    st.audio(audio_file)
             
             # AWS Configuration
             with st.expander("⚙️ AWS Configuration (Required for Voice Input)"):
@@ -218,15 +294,23 @@ if properties_df is not None:
                 ```
                 """)
             
-            if st.button("🎤 Process Voice Input", type="primary", disabled=not audio_file):
+            # Process button
+            has_audio = audio_file_path is not None or (recording_method == "📁 Upload audio file" and audio_file is not None)
+            
+            if st.button("🎤 Process Voice Input", type="primary", disabled=not has_audio):
                 if not s3_bucket:
                     st.error("Please provide an S3 bucket name in the AWS Configuration section")
                 else:
                     with st.spinner("Transcribing audio..."):
-                        # Save uploaded file temporarily
-                        with tempfile.NamedTemporaryFile(delete=False, suffix=Path(audio_file.name).suffix) as tmp_file:
-                            tmp_file.write(audio_file.read())
-                            tmp_path = tmp_file.name
+                        # Determine the audio file path
+                        if audio_file_path:
+                            # Already saved from recording
+                            tmp_path = audio_file_path
+                        else:
+                            # Save uploaded file temporarily
+                            with tempfile.NamedTemporaryFile(delete=False, suffix=Path(audio_file.name).suffix) as tmp_file:
+                                tmp_file.write(audio_file.read())
+                                tmp_path = tmp_file.name
                         
                         try:
                             # Transcribe audio with speaker diarization

@@ -15,8 +15,9 @@ The system enforces UK homelessness policies, including the 42-day emergency acc
 
 ## Features
 
-- ✅ **Conversational intake** - Caseworker-family dialogue with automatic speaker identification (NEW!)
-- ✅ **Voice input** powered by Amazon Transcribe
+- ✅ **In-browser audio recording** - Record conversations directly in the app (NEW!)
+- ✅ **Conversational intake** - Caseworker-family dialogue with automatic speaker identification
+- ✅ **Voice input** powered by Amazon Transcribe with speaker diarization
 - ✅ Web-based form for household information input
 - ✅ Weighted scoring algorithm (location-first approach)
 - ✅ Top 3 property recommendations with detailed explanations
@@ -30,7 +31,9 @@ The system enforces UK homelessness policies, including the 42-day emergency acc
 - **Backend**: Python 3.11+
 - **Web Framework**: Streamlit
 - **Data Processing**: Pandas, NumPy
-- **Voice Input**: Amazon Transcribe (AWS)
+- **Voice Input**: Amazon Transcribe (AWS) with speaker diarization
+- **Audio Recording**: streamlit-audiorecorder (in-browser)
+- **Audio Processing**: ffmpeg
 - **Data Storage**: Local CSV files
 
 ## Project Structure
@@ -84,12 +87,12 @@ This creates:
 streamlit run app.py
 ```
 
-**Option B: Voice-enabled version (requires AWS setup)**
+**Option B: Voice-enabled version with in-browser recording (requires AWS setup)**
 ```bash
 streamlit run app_voice.py
 ```
 
-See **VOICE_SETUP.md** for AWS configuration instructions.
+See **VOICE_SETUP.md** for AWS configuration and **IN_BROWSER_RECORDING.md** for recording setup.
 
 The application will open in your browser at `http://localhost:8501`
 
