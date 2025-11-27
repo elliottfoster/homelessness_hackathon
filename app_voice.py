@@ -25,17 +25,61 @@ except ImportError:
 
 # Page configuration
 st.set_page_config(
-    page_title="Voice-Enabled Accommodation Matcher",
-    page_icon="🎤",
-    layout="wide"
+    page_title="Temporary Accommodation Matching Service - GOV.UK",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Title and description
-st.title("🎤 Voice-Enabled Temporary Accommodation Matching")
+# Load GOV.UK styling
+try:
+    with open('govuk_style.css') as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+except FileNotFoundError:
+    pass  # CSS file not found, use default styling
+
+# GOV.UK Header with Logo
 st.markdown("""
-This platform matches homeless households to suitable temporary accommodation 
-using **voice input** powered by Amazon Transcribe. Simply speak your household 
-information instead of filling out forms.
+<div style="background-color: #0b0c0c; padding: 0.5rem 1rem; margin: -6rem -6rem 2rem -6rem;">
+    <div style="max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: white; font-size: 1.5rem; font-weight: 700;">GOV.UK</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Add MATCH logo below header
+try:
+    from PIL import Image
+    logo = Image.open('match_logo.png')
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        st.image(logo, width=250)
+except Exception as e:
+    # Simple fallback
+    st.markdown("""
+    <div style="padding: 1rem 0;">
+        <h2 style="color: #2B5F7F; margin: 0;">MATCH</h2>
+        <p style="color: #505a5f; font-size: 0.9rem; margin: 0.25rem 0;">Temporary Accommodation Matching Service</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Phase banner
+st.markdown("""
+<div style="background-color: #f3f2f1; padding: 0.75rem 0; margin-bottom: 1.5rem; border-bottom: 1px solid #b1b4b6;">
+    <div style="max-width: 960px; margin: 0 auto;">
+        <span style="background-color: #1d70b8; color: white; padding: 0.25rem 0.5rem; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-right: 0.5rem;">BETA</span>
+        <span style="color: #0b0c0c;">This is a prototype service – your <a href="#" style="color: #1d70b8;">feedback</a> will help us to improve it.</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Title and description
+st.title("Temporary Accommodation Matching Service")
+st.markdown("""
+Use this service to match homeless households to suitable temporary accommodation 
+based on their needs and circumstances.
+
+This service uses voice input technology to make the process more accessible.
 """)
 
 # Load property data
@@ -148,10 +192,10 @@ if properties_df is not None:
         voice_available = False
     
     # Create tabs for voice and manual input
-    tab1, tab2 = st.tabs(["🎤 Voice Input", "📝 Manual Input"])
+    tab1, tab2 = st.tabs(["Voice input", "Manual input"])
     
     with tab1:
-        st.header("🎤 Conversational Intake Mode")
+        st.header("Voice input")
         
         if not voice_available:
             st.warning("""
@@ -340,6 +384,8 @@ if properties_df is not None:
                             
                             else:
                                 st.error("❌ Failed to transcribe audio. Please check your AWS configuration and try again.")
+                            
+
                         
                         finally:
                             # Cleanup temp file
@@ -408,8 +454,8 @@ if properties_df is not None:
                     display_results(st.session_state['match_results'], household_display)
     
     with tab2:
-        st.header("📝 Manual Input Mode")
-        st.markdown("Fill in the form manually if you prefer not to use voice input.")
+        st.header("Manual input")
+        st.markdown("Fill in the form if you prefer not to use voice input.")
         
         # Original form (same as app.py)
         with st.form("household_form"):
@@ -531,35 +577,32 @@ if properties_df is not None:
 
 # Sidebar with information
 with st.sidebar:
-    st.header("ℹ️ About Voice Input")
+    st.markdown("### About this service")
     st.markdown("""
-    This platform uses **Amazon Transcribe** to convert your spoken words into text.
-    
-    **Benefits:**
-    - 🎤 Faster than typing
-    - 🌍 Accessible for all literacy levels
-    - 💬 Natural conversation style
-    - ♿ Supports those with typing difficulties
+    This service uses Amazon Transcribe to convert spoken words into text, making it more accessible.
     
     **How it works:**
-    1. Record your household information
+    1. Record household information
     2. Upload the audio file
-    3. Amazon Transcribe converts speech to text
-    4. AI extracts household details
+    3. System converts speech to text
+    4. Information is extracted automatically
     5. Matching algorithm finds suitable properties
     """)
     
-    st.header("📊 Scoring Weights")
+    st.markdown("### Matching criteria")
     st.markdown("""
-    - 🎯 Location: 35% (highest priority)
-    - 🛏️ Bedroom suitability: 25%
-    - 💷 Affordability: 20%
-    - ♿ Access needs: 15%
-    - 🏫 Amenities: 5%
+    Properties are scored based on:
+    - Location: 35% (highest priority)
+    - Bedroom suitability: 25%
+    - Affordability: 20%
+    - Access needs: 15%
+    - Amenities: 5%
     """)
     
     if properties_df is not None:
-        st.header("📊 Available Properties")
-        st.metric("Total Properties", len(properties_df))
-        st.metric("Locations", properties_df['location'].nunique())
-        st.metric("Avg Rent", f"£{properties_df['affordability'].astype(float).mean():.0f}")
+        st.markdown("### Available properties")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total", len(properties_df))
+        with col2:
+            st.metric("Locations", properties_df['location'].nunique())
